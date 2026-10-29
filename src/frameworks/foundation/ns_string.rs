@@ -129,11 +129,11 @@ impl StringHostObject {
                 StringHostObject::Utf8(Cow::Owned(cow.into_owned()))
             }
             0x80000422 => {
-    let (cow, encoding_used, had_errors) = GBK.decode(&bytes);
-    assert_eq!(encoding_used, GBK);
-    assert!(!had_errors, "GBK decoding failed");
-    StringHostObject::Utf8(Cow::Owned(cow.into_owned()))
-}
+                let (cow, encoding_used, had_errors) = GBK.decode(&bytes);
+                assert_eq!(encoding_used, GBK);
+                assert!(!had_errors, "GBK decoding failed");
+                StringHostObject::Utf8(Cow::Owned(cow.into_owned()))
+            }
             NSShiftJISStringEncoding => {
                 let (cow, encoding_used, had_errors) = SHIFT_JIS.decode(&bytes);
                 assert_eq!(encoding_used, SHIFT_JIS);
