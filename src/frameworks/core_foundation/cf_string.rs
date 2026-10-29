@@ -78,6 +78,7 @@ pub fn CFStringConvertEncodingToNSStringEncoding(
         kCFStringEncodingUTF16BE => ns_string::NSUTF16BigEndianStringEncoding,
         kCFStringEncodingUTF16LE => ns_string::NSUTF16LittleEndianStringEncoding,
         kCFStringEncodingISOLatin1 => ns_string::NSISOLatin1StringEncoding,
+        0x422 => 0x80000422,
         _ => unimplemented!("Unhandled: CFStringEncoding {:#x}", encoding),
     }
 }
