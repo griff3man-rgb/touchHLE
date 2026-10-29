@@ -30,7 +30,7 @@ use crate::objc::{
     HostObject, NSZonePtr, ObjC,
 };
 use crate::{fs, Environment};
-use encoding_rs::{SHIFT_JIS, WINDOWS_1252};
+use encoding_rs::{GBK, SHIFT_JIS, WINDOWS_1252};
 use std::borrow::Cow;
 use std::collections::HashMap;
 use std::io::Write;
@@ -62,8 +62,8 @@ const C_STRING_FRIENDLY_ENCODINGS: &[NSStringEncoding] = &[
     NSWindowsCP1252StringEncoding,
     NSMacOSRomanStringEncoding,
     NSISOLatin1StringEncoding,
+    0x80000422, // GBK
 ];
-
 pub const NSMaximumStringLength: NSUInteger = (i32::MAX - 1) as _;
 
 #[derive(Default)]
@@ -128,6 +128,12 @@ impl StringHostObject {
                 assert!(!had_errors);
                 StringHostObject::Utf8(Cow::Owned(cow.into_owned()))
             }
+            0x80000422 => {
+    let (cow, encoding_used, had_errors) = GBK.decode(&bytes);
+    assert_eq!(encoding_used, GBK);
+    assert!(!had_errors, "GBK decoding failed");
+    StringHostObject::Utf8(Cow::Owned(cow.into_owned()))
+}
             NSShiftJISStringEncoding => {
                 let (cow, encoding_used, had_errors) = SHIFT_JIS.decode(&bytes);
                 assert_eq!(encoding_used, SHIFT_JIS);
